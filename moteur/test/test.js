@@ -25,12 +25,23 @@ MonTestCase.prototype.testD=function(){
 MonTestCase.prototype.testE=function(){
     assertTrue(motor.ligne_droite(0,0,1,1)===true);
 };
-/*MonTestCase.prototype.testF=function(){
+MonTestCase.prototype.testF=function(){
     assertTrue(motor.distance_cases(2,3,1,2)===1);
-    assertTrue(motor.distance_cases(0,0,1,3)===2);
+    assertTrue(motor.distance_cases(0,2,0,4)===2);
 };
 MonTestCase.prototype.testG=function(){
-    motor.place_marble(3,3);
-    assertTrue(motor.coup_possible(1,2,2,3,3)===true);
-};*/
+    motor.tab[motor.get_pos(4,4)]=11;
+    assertTrue(motor.coup_possible(1,2,2,4,4)===true);
+};
+MonTestCase.prototype.testH=function(){
+    motor.deplacer_tour(1,2,2,4,4);
+    console.log(" case 4,4 "+motor.tab[motor.get_pos(4,4)]);
+    console.log(" case 2,2 "+motor.tab[motor.get_pos(2,2)]);
+    assertTrue(motor.tab[motor.get_pos(4,4)]==111);
+    assertTrue(motor.tab[motor.get_pos(2,2)]==0);
+};
 
+MonTestCase.prototype.testH=function(){
+    motor.changetour();
+    assertTrue(motor.Jcourant===2);
+}
