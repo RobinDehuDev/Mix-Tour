@@ -22,7 +22,7 @@ var moteur = function () {
     };
 
     this.place_marble = function (column, line) {
-        var pos = get_pos(column, line);
+        var pos = this.get_pos(column, line);
         var r = 0;
         if (this.tab[pos] = 0) {
             this.tab[pos] = Jcourant;
@@ -32,11 +32,61 @@ var moteur = function () {
     };
 
 
-    this.distance_cases = function (colonne_depart, colonne_arrivee) {
-        if (colonne_arrivee >= colonne_depart)
+    this.distance_cases = function (colonne_depart, ligne_depart, colonne_arrivee, ligne_arrivee) {
+
+        if(colonne_arrivee != colonne_depart && ligne_arrivee != ligne_depart)
+        {
+            if((colonne_arrivee >= colonne_depart) && (ligne_arrivee >= ligne_depart))
+            {
+                if ((colonne_arrivee - colonne_depart) != (ligne_arrivee - ligne_depart))
+                {
+                    System.out.println("impossible de calculer la distance gros Bêtah");
+                    return 0;
+                }
+            }
+            if((colonne_arrivee >= colonne_depart) && (ligne_arrivee < ligne_depart))
+            {
+                if ((colonne_arrivee - colonne_depart) != (ligne_depart - ligne_arrivee))
+                {
+                    System.out.println("impossible de calculer la distance gros Bêtah");
+                    return 0;
+                }
+            }
+            if((colonne_arrivee < colonne_depart) && (ligne_arrivee >= ligne_depart))
+            {
+                if ((colonne_depart - colonne_arrivee) != (ligne_arrivee - ligne_depart))
+                {
+                    System.out.println("impossible de calculer la distance gros Bêtah");
+                    return 0;
+                }
+            }
+            if((colonne_arrivee < colonne_depart) && (ligne_arrivee < ligne_depart))
+            {
+                if ((colonne_depart - colonne_arrivee) != (ligne_depart - ligne_arrivee))
+                {
+                    System.out.println("impossible de calculer la distance gros Bêtah");
+                    return 0;
+                }
+            }
+        }
+
+        if (colonne_arrivee > colonne_depart)
             return (colonne_arrivee - colonne_depart);
+        else if(colonne_depart == colonne_arrivee)
+        {
+            if(ligne_arrivee >= ligne_depart)
+            {
+                return(ligne_arrivee - ligne_depart);
+            }
+            else
+            {
+                return(ligne_depart - ligne_arrivee);
+            }
+        }
         else
+        {
             return (colonne_depart - colonne_arrivee);
+        }
     };
 
     this.ligne_droite = function (colonne_depart, ligne_depart, colonne_arrivee, ligne_arrivee) {
@@ -94,4 +144,45 @@ var moteur = function () {
         }
         return false;
     };
+
+    this.deplacer_tour(nombre_pions, colonne_depart, ligne_depart, colonne_arrivee, ligne_arrivee)
+    {
+        if(this.coup_possible(nombre_pions, colonne_depart, ligne_depart, colonne_arrivee, ligne_arrivee))
+        {
+            var longueur = this.tab[this.get_pos(colonne_depart, ligne_depart)].length;
+            var pions_a_deplacer = parseInt(this.tab[this.get_pos(colonne_depart, ligne_depart)].toString().substr(0,nombre_pions));
+
+            this.tab[this.get_pos(colonne_arrivee, ligne_arrivee)] = this.tab[this.get_pos(colonne_depart, ligne_depart)].toString().substr(0,nombre_pions-1) + this.tab[this.get_pos(colonne_arrivee, ligne_arrivee)]; // on ajoute sur la case finale
+
+            this.tab[this.get_pos(colonne_depart, ligne_depart)] = parseInt(this.tab[this.get_pos(colonne_depart, ligne_depart)].toSring().substr(longueur - (nombre_pions - 1), longueur)); // on enlève sur la case de départ
+
+            if( (this.tab[this.get_pos(colonne_arrivee, ligne_arrivee)].length) >= 5 ) // si la pile d'arrivée est plus grande que 5
+            {
+                for(var i = 0; i < this.tab[this.get_pos(colonne_arrivee, ligne_arrivee)].length; i++) // pour tous les pions de la pile
+                {
+                    if(this.tab[this.get_pos(colonne_arrivee, ligne_arrivee)].toString().charAt(i) == 1) // si le pion est un pion 1
+                    {
+                        this.nbpj1 ++; // on incrémente le nombre de pions 1
+                    }
+                    if(this.tab[this.get_pos(colonne_arrivee, ligne_arrivee)].toString().charAt(i) == 2) // si le pion est un pion 2
+                    {
+                        this.nbpj2 ++; // on incrémente le nombre de pions 2
+                    }
+
+                    var dernier_pion = parseInt(this.tab[this.get_pos(colonne_arrivee, ligne_arrivee)].toString().charAt(i));
+                }
+
+                if(dernier_pion == 1) // augmentation du score de J1 ou J2
+                {
+                    this.J1 ++;
+                }
+                if(dernier_pion == 2)
+                {
+                    this.J2 ++;
+                }
+
+                this.tab[this.get_pos(colonne_arrivee, ligne_arrivee)] = 0; // on enlève la pile du jeu
+            }
+        }
+    }
 };
