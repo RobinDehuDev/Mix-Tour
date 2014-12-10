@@ -12,6 +12,8 @@ var moteur = function () {
 
     this.init_plateau = function () {
         this.Jcourant = 1;
+        this.nbpj1 = 25;
+        this.nbpj2 = 25;
         this.lastcoup=00000;
         for (var i = 0; i < 25; i++) {
             this.tab[i] = 0;
@@ -22,13 +24,52 @@ var moteur = function () {
         return 5 * line + column;
     };
 
+    this.ajoutJetonJoueurCourant = function(nombre_jetons)
+    {
+        if(this.Jcourant == 1)
+        {
+            this.nbpj1 = this.nbpj1 + nombre_jetons;
+        }
+        else
+        {
+            this.nbpj2 = this.nbpj2 + nombre_jetons;
+        }
+    };
+
+    this.ajoutJetonJoueurAdverse = function(nombre_jetons)
+    {
+        if(this.Jcourant == 1)
+        {
+            this.nbpj2 = this.nbpj2 + nombre_jetons;
+        }
+        else
+        {
+            this.nbpj1 = this.nbpj1 + nombre_jetons;
+        }
+    };
+
+    this.getJetonsJoueurCourant = function()
+    {
+        if(this.Jcourant == 1)
+        {
+            return this.nbpj1;
+        }
+        else
+        {
+            return this.nbpj2;
+        }
+    };
+
     this.place_marble = function (column, line) {
         var pos = this.get_pos(column, line);
         var r = 0;
-        if (this.tab[pos] == 0) {
+        if (this.tab[pos] == 0 && this.getJetonsJoueurCourant() !== 0) {
             this.tab[pos] = this.Jcourant;
             r = 1;
         }
+
+        this.ajoutJetonJoueurCourant(-1);
+
         return r;
     };
 
@@ -191,9 +232,7 @@ var moteur = function () {
 
             if( (this.tab[this.get_pos(colonne_arrivee, ligne_arrivee)].toString().length) >= 5 ) // si la pile d'arrivée est plus grande que 5
             {
-
-
-                    var dernier_pion = parseInt(this.tab[this.get_pos(colonne_arrivee, ligne_arrivee)].toString().charAt(0));
+                var dernier_pion = parseInt(this.tab[this.get_pos(colonne_arrivee, ligne_arrivee)].toString().charAt(0));
 
                 if(dernier_pion == 1) // augmentation du score de J1 ou J2
                 {
@@ -202,6 +241,28 @@ var moteur = function () {
                 if(dernier_pion == 2)
                 {
                     this.J2 ++;
+                }
+
+                var compteur_pions1;
+                var compteur_pions2;
+
+                for(var i = 0; i < this.tab[this.get_pos(colonne_arrivee, ligne_arrivee)].toString().length; i++)
+                {
+                    if(parseInt(this.tab[this.get_pos(colonne_arrivee, ligne_arrivee)].toString().charAt(i)) == 1)
+                        compteur_pions1 ++;
+                    else
+                        compteur_pions2 ++;
+                }
+
+                if(this.Jcourant == 1)
+                {
+                    this.ajoutJetonJoueurCourant(compteur_pions1);
+                    this.ajoutJetonJoueurAdverse(compteur_pions2);
+                }
+                else
+                {
+                    this.ajoutJetonJoueurCourant(compteur_pions2);
+                    this.ajoutJetonJoueurAdverse(compteur_pions1);
                 }
 
                 this.tab[this.get_pos(colonne_arrivee, ligne_arrivee)] = 0; // on enlève la pile du jeu

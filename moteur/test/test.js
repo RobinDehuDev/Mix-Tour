@@ -21,6 +21,7 @@ MonTestCase.prototype.testC=function(){
 MonTestCase.prototype.testD=function(){
     motor.place_marble(2,2);
     assertTrue(motor.get_tete_pile(2,2)===1);
+    assertTrue(motor.nbpj1 === 24);
 };
 MonTestCase.prototype.testE=function(){
     assertTrue(motor.ligne_droite(0,0,1,1)===true);
@@ -41,7 +42,12 @@ MonTestCase.prototype.testH=function(){
     assertTrue(motor.tab[motor.get_pos(2,2)]==0);
 };
 
-MonTestCase.prototype.testH=function(){
+MonTestCase.prototype.testI=function(){
     motor.changetour();
     assertTrue(motor.Jcourant===2);
-}
+};
+
+MonTestCase.prototype.testJ=function(){
+    motor.ajoutJetonJoueurCourant(-1);
+    assertTrue(motor.getJetonsJoueurCourant()==24);
+};
