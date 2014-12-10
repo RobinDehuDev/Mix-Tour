@@ -3,17 +3,20 @@
  */
 $( document ).ready(function() {
     var tempMovePile = 0;
+    var board;
+    var ligneDepart;
+    var colonneDepart;
+    var nbPions;
+    var deplacement = false;
 
     //test tableau case
-    var board = new Array(5);
+    /*var board = new Array(5);
     for(var ligne=0; ligne<board.length;ligne++){
         board[ligne] = new Array(5);
 
         for(var colonne=0; colonne<board[ligne].length;colonne++){
             board[ligne][colonne] = 0;
         }
-
-
     }
 
     //test
@@ -45,13 +48,18 @@ $( document ).ready(function() {
     board[4][1] = 0;
     board[4][2] = 0;
     board[4][3] = 0;
-    board[4][4] = 0;
+    board[4][4] = 0;*/
 
+    var motor = new moteur();
+    motor.init_plateau();
+    //motor.tab[2] = 1212;
+    //motor.tab[24] = 22;
+    console.log(motor.tab);
 
     var reponse;
     $('#player1').click(function() {
         var joueur1=1;
-        reponse =prompt("Quel est votre nom Joueur 1?");
+        reponse = prompt("Quel est votre nom Joueur 1?");
         alert (reponse);
     });
     $('#player2').click(function() {
@@ -64,10 +72,46 @@ $( document ).ready(function() {
     $("td").click(function() {
         var idDiv = $(this).attr("id");
 
-        var ligne = idDiv.substring(0,1);
-        var colonne = idDiv.substring(1,2);
+        var ligne = parseInt(idDiv.substring(0,1));
+        var colonne = parseInt(idDiv.substring(1,2));
 
-        movePile(ligne,colonne);
+        //motor.tab[motor.get_pos(colonne, ligne)] = motor.Jcourant;
+        if(deplacement === false){
+            if(motor.tab[motor.get_pos(colonne,ligne)] === 0){
+                motor.place_marble(colonne,ligne);
+                display_pions_plateau(motor);
+                console.log(motor.tab);
+                motor.changetour();
+            }else{
+                //Initialisation du déplacement
+                nbPions = prompt("Combien de pions voulez-vous déplacer ?","0");
+                // this.deplacer_tour = function(nombre_pions, colonne_depart, ligne_depart, colonne_arrivee, ligne_arrivee)
+                ligneDepart = ligne;
+                colonneDepart = colonne;
+                deplacement = true;
+                
+                    console.log(motor.tab);
+
+                console.log(deplacement);
+            }
+        }else{
+            //motor.deplacer_tour(nbPions,colonneDepart,ligneDepart,colonne,ligne);
+            console.log("Nombre pions : " + nbPions);
+            console.log("Colonne départ : " + colonneDepart);
+            console.log("Ligne départ : " + ligneDepart);
+            console.log("Colonne arrivé : " + colonne);
+            console.log("Ligne arrivé : " + ligne);
+            display_pions_plateau(motor);
+            deplacement = false;
+        }
+
+
+
+
+
+
+
+        /*movePile(ligne,colonne);
 
         if(tempMovePile !== 0){
             if(board[ligne][colonne] === 0){
@@ -78,22 +122,32 @@ $( document ).ready(function() {
             }
             console.log(tempMovePile);
             tempMovePile = 0;
-        }
+        }*/
 
-        if(Jcourant == "b"){
 
-            //$(this).html('<div class="circleBlue"></div>');
+
+        /*if(Jcourant == "b"){
+
+            $(this).html('<div class="circleBlue"></div>');
             Jcourant = "r";
         }else{
             //$(this).html('<div class="circleRed"></div>');
             Jcourant = "b";
-        }
+        }*/
+
+
     });
 
+/*
+* Evenement au chargement de la page du plateau
+*/
     $(window).load(function(){
 
-        placerPion(board);
+        display_pions_plateau(motor);
         //movePile(1,2);
+        //convertTabMotor();
+        //console.log(board);
+
     });
 
     var nbChiffre = function(number){
@@ -131,17 +185,37 @@ $( document ).ready(function() {
         }
     };
 
-    var placerPion = function(tab){
+    var convertTabMotor = function(){
+        board = new Array(5);
 
-        for(ligne=0;ligne<tab.length;ligne++){
-            for(colonne=0;colonne<tab[ligne].length;colonne++){
+        for(var ligne=0;ligne<board.length;ligne++){
+            board[ligne] = new Array(5);
+            for(var colonne=0;colonne<board[ligne].length;colonne++){
+                motor.get_pos(colonne,ligne);
+            }
+        }
+    };
+
+/*
+* Affichage des pions sur le plateau a partir du tableau du moteur
+*/
+    var display_pions_plateau = function(m){
+        //initialisation à vide
+        for(ligne=0;ligne<5;ligne++){
+            for(colonne=0;colonne<5;colonne++){
+                var id = String(ligne) +  String(colonne);
+                $("#" + id).html("");
+            }
+        }
+
+        for(ligne=0;ligne<5;ligne++){
+            for(colonne=0;colonne<5;colonne++){
                 var sizeCircle = 85;
-                var valCase = tab[ligne][colonne];
+                var valCase = m.tab[m.get_pos(colonne, ligne)];
                 var numberPion;
                 var nbPion = 0;
                 while(valCase != 0){
                     numberPion = valCase % 10;
-
 
                     //Création des cercles
                     resizeCircle(String(ligne) +  String(colonne), nbPion, numberPion, sizeCircle);
@@ -171,11 +245,6 @@ $( document ).ready(function() {
             }else{
                 $('#' + id).append('<div class="circleRed" style="width: ' + sizeCircle + 'px; height: ' + sizeCircle + 'px; margin-top:' + String(-1 * sizeCircle - 5)  + 'px;"></div>');
             }
-
-            /*$('.circleRed').css({
-                width: sizeCircle + "px",
-                height: sizeCircle + "px"
-            });*/
         }
     };
 });

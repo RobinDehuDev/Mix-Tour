@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
     <LINK href="style.css" rel="stylesheet" type="text/css">
     <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="../moteur/src/moteur.js"></script>
     <script src="js/event.js"></script>
     <title>Mix-Tour</title>
 </head>
