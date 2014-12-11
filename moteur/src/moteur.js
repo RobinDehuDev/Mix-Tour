@@ -19,6 +19,15 @@ var moteur = function () {
             this.tab[i] = 0;
         }
     };
+    this.init_plateau = function (tab2,j1,j2,jcourant,derniercoup,nbj1,nbj2) {
+        this.Jcourant = jcourant;
+        this.nbpj1 = nbj1;
+        this.nbpj2 = nbj2;
+        this.lastcoup=derniercoup;
+        for (var i = 0; i < 25; i++) {
+            this.tab[i] = tab2[i];
+        }
+    };
 
     this.get_pos = function (column, line) {
         return 5 * line + column;
