@@ -9,6 +9,8 @@ $( document ).ready(function() {
     var nbPions;
     var deplacement = false;
 
+
+
     //test tableau case
     /*var board = new Array(5);
     for(var ligne=0; ligne<board.length;ligne++){
@@ -51,7 +53,7 @@ $( document ).ready(function() {
     board[4][4] = 0;*/
 
     var motor = new moteur();
-    motor.init_plateau();
+    //motor.init_plateau();
     //motor.tab[2] = 1212;
     //motor.tab[24] = 22;
     console.log(motor.tab);
@@ -91,17 +93,18 @@ $( document ).ready(function() {
                 deplacement = true;
                 
                     console.log(motor.tab);
-
+                $(this).
                 console.log(deplacement);
             }
         }else{
-            //motor.deplacer_tour(nbPions,colonneDepart,ligneDepart,colonne,ligne);
+            motor.deplacer_tour(nbPions,colonneDepart,ligneDepart,colonne,ligne);
             console.log("Nombre pions : " + nbPions);
             console.log("Colonne départ : " + colonneDepart);
             console.log("Ligne départ : " + ligneDepart);
             console.log("Colonne arrivé : " + colonne);
             console.log("Ligne arrivé : " + ligne);
             display_pions_plateau(motor);
+            console.log(motor.tab);
             deplacement = false;
         }
 
@@ -143,12 +146,70 @@ $( document ).ready(function() {
 */
     $(window).load(function(){
 
-        display_pions_plateau(motor);
+        /*motor.tab[motor.get_pos(0,2)]=112;
+        motor.tab[motor.get_pos(3,4)]=1;
+        //motor.place_marble(0,2);
+        //motor.place_marble(0,2);
+        console.log(motor.tab[motor.get_pos(0,2)]);
+        console.log(motor.tab[motor.get_pos(3,4)]);
+        motor.deplacer_tour(1,0,2,3,4);
+        console.log(motor.tab[motor.get_pos(0,2)]);
+        console.log(motor.tab[motor.get_pos(3,4)]);*/
+        //motor.place_marble(3,3);
+        //motor.place_marble(4,4);
+
+
         //movePile(1,2);
         //convertTabMotor();
         //console.log(board);
+        var data;
+        $.ajax({
+            dataType: "json",
+            url: "data.php",
+            data: data,
+            success: function(data){
+                var plateau = data['plateau'];
+                var tabPlateau = plateau.split(" ");
+                motor.tab = tabPlateau;
+
+                /*points_J1 = data['points_J1'];
+                 points_J2 = data['points_J2'];
+                 pions_restJ1 = data['pions_j1'];
+                 pions_restJ2 = data['pions_j2'];
+                 lastCoup = data['last'];*/
+                display_pions_plateau(motor);
+            }
+        });
+
 
     });
+
+    var line_initialisation = function(m){
+        var plateau;
+        var points_J1;
+        var points_J2;
+
+        var pions_restJ1;
+        var pions_restJ2;
+
+        var lastCoup;
+
+        var data;
+
+
+
+        alert(plateau);
+
+
+        /*console.log(points_J1);
+        console.log(points_J2);
+        console.log(pions_restJ1);
+        console.log(pions_restJ2);
+        console.log(lastCoup);*/
+
+
+
+    };
 
     var nbChiffre = function(number){
         var ret = 1;
