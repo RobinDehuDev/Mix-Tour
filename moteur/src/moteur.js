@@ -219,16 +219,18 @@ var moteur = function () {
         {
             var longueur = this.tab[this.get_pos(colonne_depart, ligne_depart)].toString().length;
            //console.log("longueur "+longueur);
-            var pions_a_deplacer = parseInt(this.tab[this.get_pos(colonne_depart, ligne_depart)].toString().substr(0,nombre_pions));
-           // console.log("ahah: "+this.tab[this.get_pos(colonne_depart, ligne_depart)].toString().substr(0,nombre_pions));
-            this.tab[this.get_pos(colonne_arrivee, ligne_arrivee)] =parseInt( this.tab[this.get_pos(colonne_depart, ligne_depart)].toString().substr(0,nombre_pions) + this.tab[this.get_pos(colonne_arrivee, ligne_arrivee)].toString()); // on ajoute sur la case finale
-            if(this.tab[this.get_pos(colonne_depart, ligne_depart)].toString.length===1){
-                this.tab[this.get_pos(colonne_depart, ligne_depart)]=0;
-            }
-            else {
-                this.tab[this.get_pos(colonne_depart, ligne_depart)] = parseInt(this.tab[this.get_pos(colonne_depart, ligne_depart)].toString().substr(longueur - (nombre_pions - 1), longueur)); // on enlève sur la case de départ
-            }
+            var pions_a_deplacer = parseInt(this.tab[this.get_pos(colonne_depart, ligne_depart)].toString().substring(0,nombre_pions));
+           // console.log("ahah: "+this.tab[this.get_pos(colonne_depart, ligne_depart)].toString().substring(0,nombre_pions));
+            this.tab[this.get_pos(colonne_arrivee, ligne_arrivee)] =parseInt( this.tab[this.get_pos(colonne_depart, ligne_depart)].toString().substring(0,nombre_pions) + this.tab[this.get_pos(colonne_arrivee, ligne_arrivee)].toString()); // on ajoute sur la case finale
 
+            if((longueur-(nombre_pions-1))!==longueur) {
+
+
+                this.tab[this.get_pos(colonne_depart, ligne_depart)] = parseInt(this.tab[this.get_pos(colonne_depart, ligne_depart)].toString().substring(longueur - (nombre_pions - 1), longueur)); // on enlève sur la case de départ
+            }
+            else{
+                this.tab[this.get_pos(colonne_depart, ligne_depart)] =0;
+            }
 
             if( (this.tab[this.get_pos(colonne_arrivee, ligne_arrivee)].toString().length) >= 5 ) // si la pile d'arrivée est plus grande que 5
             {

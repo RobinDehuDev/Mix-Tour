@@ -36,8 +36,7 @@ MonTestCase.prototype.testG=function(){
 };
 MonTestCase.prototype.testH=function(){
     motor.deplacer_tour(1,2,2,4,4);
-    console.log(" case 4,4 "+motor.tab[motor.get_pos(4,4)]);
-    console.log(" case 2,2 "+motor.tab[motor.get_pos(2,2)]);
+
     assertTrue(motor.tab[motor.get_pos(4,4)]==111);
     assertTrue(motor.tab[motor.get_pos(2,2)]==0);
 };
@@ -50,4 +49,14 @@ MonTestCase.prototype.testI=function(){
 MonTestCase.prototype.testJ=function(){
     motor.ajoutJetonJoueurCourant(-1);
     assertTrue(motor.getJetonsJoueurCourant()==24);
+};
+MonTestCase.prototype.testK=function(){
+    motor.place_marble(3,4);
+    console.log(motor.tab[motor.get_pos(4,4)]);
+    console.log(motor.tab[motor.get_pos(3,4)]);
+    motor.deplacer_tour(2,4,4,3,4);
+    console.log(motor.tab[motor.get_pos(4,4)]);
+    console.log(motor.tab[motor.get_pos(3,4)]);
+    assertTrue(motor.tab[motor.get_pos(4,4)]==1);
+    assertTrue(motor.tab[motor.get_pos(3,4)]==112);
 };
