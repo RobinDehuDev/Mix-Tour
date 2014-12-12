@@ -1,5 +1,5 @@
 /**
- * Created by antoine on 09/12/14.
+ * Created by Antoine LECOUSTRE on 09/12/14.
  */
 $( document ).ready(function() {
     var tempMovePile = 0;
@@ -8,8 +8,7 @@ $( document ).ready(function() {
     var colonneDepart;
     var nbPions;
     var deplacement = false;
-
-
+    var tempIdDivDeplacement;
 
     //test tableau case
     /*var board = new Array(5);
@@ -53,10 +52,6 @@ $( document ).ready(function() {
     board[4][4] = 0;*/
 
     var motor = new moteur();
-    //motor.init_plateau();
-    //motor.tab[2] = 1212;
-    //motor.tab[24] = 22;
-    console.log(motor.tab);
 
     var reponse;
     $('#player1').click(function() {
@@ -77,27 +72,28 @@ $( document ).ready(function() {
         var ligne = parseInt(idDiv.substring(0,1));
         var colonne = parseInt(idDiv.substring(1,2));
 
-        //motor.tab[motor.get_pos(colonne, ligne)] = motor.Jcourant;
+        //Verification si l'on est en mode "placer pion" (pas déplacement)
         if(deplacement === false){
             if(motor.tab[motor.get_pos(colonne,ligne)] === 0){
+                //Ajout d'un jeton dans une case vide
                 motor.place_marble(colonne,ligne);
                 display_pions_plateau(motor);
-                console.log(motor.tab);
                 motor.changetour();
             }else{
                 //Initialisation du déplacement
-                nbPions = prompt("Combien de pions voulez-vous déplacer ?","0");
-                // this.deplacer_tour = function(nombre_pions, colonne_depart, ligne_depart, colonne_arrivee, ligne_arrivee)
+                nbPions = prompt("Combien de pions voulez-vous déplacer ?","1");
                 ligneDepart = ligne;
                 colonneDepart = colonne;
                 deplacement = true;
-                
-                    console.log(motor.tab);
-                $(this).
+                tempIdDivDeplacement = $(this).attr("id");
+                $(this).css('background-color', 'yellow');
+                console.log(motor.tab);
                 console.log(deplacement);
             }
         }else{
+            //Execution du déplacement
             motor.deplacer_tour(nbPions,colonneDepart,ligneDepart,colonne,ligne);
+            $('#' + tempIdDivDeplacement).css('background-color', 'lightblue');
             console.log("Nombre pions : " + nbPions);
             console.log("Colonne départ : " + colonneDepart);
             console.log("Ligne départ : " + ligneDepart);
@@ -107,11 +103,6 @@ $( document ).ready(function() {
             console.log(motor.tab);
             deplacement = false;
         }
-
-
-
-
-
 
 
         /*movePile(ligne,colonne);
@@ -158,58 +149,33 @@ $( document ).ready(function() {
         //motor.place_marble(3,3);
         //motor.place_marble(4,4);
 
-
-        //movePile(1,2);
-        //convertTabMotor();
-        //console.log(board);
-        var data;
+        //var data;
         $.ajax({
             dataType: "json",
             url: "data.php",
-            data: data,
             success: function(data){
                 var plateau = data['plateau'];
-                var tabPlateau = plateau.split(" ");
-                motor.tab = tabPlateau;
+                var points_J1 = data['points_J1'];
+                var points_J2 = data['points_J2'];
+                var pions_j1 = data['pions_j1'];
+                var pions_j2 = data['pions_j2'];
+                var last = data['last'];
 
-                /*points_J1 = data['points_J1'];
-                 points_J2 = data['points_J2'];
-                 pions_restJ1 = data['pions_j1'];
-                 pions_restJ2 = data['pions_j2'];
-                 lastCoup = data['last'];*/
+                var tabPlateau = plateau.split(" ");
+                var tabPlateauInt = new Array(25);
+
+                for(var i=0;i<tabPlateauInt.length;i++){
+                    tabPlateauInt[i] = parseInt(tabPlateau[i]);
+                }
+
+                motor.init_plateau(tabPlateauInt, points_J1, pions_j2, 1, last, pions_j1,pions_j2);
                 display_pions_plateau(motor);
+            
             }
         });
 
 
     });
-
-    var line_initialisation = function(m){
-        var plateau;
-        var points_J1;
-        var points_J2;
-
-        var pions_restJ1;
-        var pions_restJ2;
-
-        var lastCoup;
-
-        var data;
-
-
-
-        alert(plateau);
-
-
-        /*console.log(points_J1);
-        console.log(points_J2);
-        console.log(pions_restJ1);
-        console.log(pions_restJ2);
-        console.log(lastCoup);*/
-
-
-
-    };
 
     var nbChiffre = function(number){
         var ret = 1;
@@ -291,7 +257,6 @@ $( document ).ready(function() {
     };
 
     var resizeCircle = function(id, nbPion, valuePion, sizeCircle){
-
 
         if(valuePion === 1){
             if(nbPion === 0){
