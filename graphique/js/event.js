@@ -9,7 +9,7 @@ $( document ).ready(function() {
     var nbPions;
     var deplacement = false;
     var tempIdDivDeplacement;
-    var id_plateau;
+    var id_plateau = 1;
 
     //test tableau case
     /*var board = new Array(5);
@@ -108,29 +108,7 @@ $( document ).ready(function() {
         }
 
 
-        /*movePile(ligne,colonne);
-
-        if(tempMovePile !== 0){
-            if(board[ligne][colonne] === 0){
-                board[ligne][colonne] = tempMovePile;
-
-            }else{
-                board[ligne][colonne] = parseInt(String(tempMovePile) + String(board[ligne][colonne]));
-            }
-            console.log(tempMovePile);
-            tempMovePile = 0;
-        }*/
-
-
-
-        /*if(Jcourant == "b"){
-
-            $(this).html('<div class="circleBlue"></div>');
-            Jcourant = "r";
-        }else{
-            //$(this).html('<div class="circleRed"></div>');
-            Jcourant = "b";
-        }*/
+        console.log(motor.tab);
 
 
     });
@@ -140,38 +118,30 @@ $( document ).ready(function() {
 */
     $(window).load(function(){
 
-        /*motor.tab[motor.get_pos(0,2)]=112;
-        motor.tab[motor.get_pos(3,4)]=1;
-        //motor.place_marble(0,2);
-        //motor.place_marble(0,2);
-        console.log(motor.tab[motor.get_pos(0,2)]);
-        console.log(motor.tab[motor.get_pos(3,4)]);
-        motor.deplacer_tour(1,0,2,3,4);
-        console.log(motor.tab[motor.get_pos(0,2)]);
-        console.log(motor.tab[motor.get_pos(3,4)]);*/
-        //motor.place_marble(3,3);
-        //motor.place_marble(4,4);
-
-        //var data;
         $.ajax({
             dataType: "json",
+            type: "POST",
             url: "data.php",
+            data: "idplateau=" + id_plateau,
             success: function(data){
-                var plateau = data['plateau'];
+
+                var plateau = data['etat_plateau'];
                 var points_J1 = data['points_J1'];
                 var points_J2 = data['points_J2'];
-                var pions_j1 = data['pions_j1'];
-                var pions_j2 = data['pions_j2'];
-                var last = data['last'];
+                var pions_j1 = data['pions_J1'];
+                var pions_j2 = data['pions_J2'];
+                var last = data['derniercoup'];
+                var courant = data['courant'];
 
                 var tabPlateau = plateau.split(" ");
                 var tabPlateauInt = new Array(25);
+
 
                 for(var i=0;i<tabPlateauInt.length;i++){
                     tabPlateauInt[i] = parseInt(tabPlateau[i]);
                 }
 
-                motor.init_plateau2(tabPlateauInt, points_J1, points_J2, 1, last, pions_j1,pions_j2);
+                motor.init_plateau2(tabPlateauInt, points_J1, points_J2, courant, last, pions_j1,pions_j2);
                 display_pions_plateau(motor);
 
             }
@@ -179,9 +149,41 @@ $( document ).ready(function() {
 
     });
 
+    //Raffraichissement du platerau toutes les 5 secondes
+    setTimeout(function(){
+        $.ajax({
+            dataType: "json",
+            type: "POST",
+            url: "data.php",
+            data: "idplateau=" + id_plateau,
+            success: function(data){
+
+                var plateau = data['etat_plateau'];
+                var points_J1 = data['points_J1'];
+                var points_J2 = data['points_J2'];
+                var pions_j1 = data['pions_J1'];
+                var pions_j2 = data['pions_J2'];
+                var last = data['derniercoup'];
+                var courant = data['courant'];
+
+                var tabPlateau = plateau.split(" ");
+                var tabPlateauInt = new Array(25);
+
+
+                for(var i=0;i<tabPlateauInt.length;i++){
+                    tabPlateauInt[i] = parseInt(tabPlateau[i]);
+                }
+
+                motor.init_plateau2(tabPlateauInt, points_J1, points_J2, courant, last, pions_j1,pions_j2);
+                display_pions_plateau(motor);
+
+            }
+        });
+    }, 5000);
+
     
 
-    var save_bdd = function(id,plateau,points_J1,points_J2,pions_j1,pions_j2,last, jcourant){
+    var save_bdd = function(id,plateau,points_J1,points_J2,pions_J1,pions_J2,last, jcourant){
         var chainePlateau = "";
 
         for(var i=0;i<plateau.length;i++){
@@ -191,7 +193,7 @@ $( document ).ready(function() {
         $.ajax({
             url: "save_data_partie.php",
             type: "POST",
-            data: "id=" + id + "&plateau=" + chainePlateau + "&points_J1=" + points_J1 + "&points_J2=" + points_J2 + "&pions_j1=" + pions_j1 + "&pions_j2=" + pions_j2 + "&last=" + last + "&courant=" + jcourant,
+            data: "id=" + id + "&plateau=" + chainePlateau + "&points_J1=" + points_J1 + "&points_J2=" + points_J2 + "&pions_J1=" + pions_J1 + "&pions_J2=" + pions_J2 + "&last=" + last + "&courant=" + jcourant,
             success: function(data){
                 //console.log(data);
             }
@@ -280,16 +282,16 @@ $( document ).ready(function() {
 
         if(valuePion === 1){
             if(nbPion === 0){
-                $('#' + id).append('<div class="circleBlue" style="margin-top: -15px;"></div></td>');
+                $('#' + id).append('<div class="circleBlue" style="margin-top: auto;"></div></td>');
             }else{
-                $('#' + id).append('<div class="circleBlue" style="width: ' + sizeCircle + 'px; height: ' + sizeCircle + 'px; margin-top:' + String(-1 * sizeCircle - 5)  + 'px;"></div>');
+                $('#' + id).append('<div class="circleBlue" style="width: ' + sizeCircle + 'px; height: ' + sizeCircle + 'px; margin-top:' + String(-1 * sizeCircle)  + 'px;"></div>');
             }
 
         }else{
             if(nbPion === 0){
-                $('#' + id).append('<div class="circleRed" style="margin-top: -15px;"></div></td>');
+                $('#' + id).append('<div class="circleRed" style="margin-top: auto;"></div></td>');
             }else{
-                $('#' + id).append('<div class="circleRed" style="width: ' + sizeCircle + 'px; height: ' + sizeCircle + 'px; margin-top:' + String(-1 * sizeCircle - 5)  + 'px;"></div>');
+                $('#' + id).append('<div class="circleRed" style="width: ' + sizeCircle + 'px; height: ' + sizeCircle + 'px; margin-top:' + String(-1 * sizeCircle)  + 'px;"></div>');
             }
         }
     };
