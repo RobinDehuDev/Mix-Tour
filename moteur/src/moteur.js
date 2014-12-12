@@ -76,7 +76,7 @@ var moteur = function () {
         var pos = this.get_pos(column, line);
         var r = 0;
         if (this.tab[pos] == 0 && this.getJetonsJoueurCourant() !== 0) {
-            this.tab[pos] = this.Jcourant;
+            this.tab[pos] = parseInt(this.Jcourant);
             r = 1;
         }
 
@@ -228,7 +228,7 @@ var moteur = function () {
     {
         if(this.coup_possible(nombre_pions, colonne_depart, ligne_depart, colonne_arrivee, ligne_arrivee))
         {
-            var longueur = this.tab[this.get_pos(colonne_depart, ligne_depart)].toString().length;
+            var longueur = (this.tab[this.get_pos(colonne_depart, ligne_depart)]).toString().length;
            //console.log("longueur "+longueur);
             var pions_a_deplacer = parseInt(this.tab[this.get_pos(colonne_depart, ligne_depart)].toString().substring(0,nombre_pions));
            // console.log("ahah: "+this.tab[this.get_pos(colonne_depart, ligne_depart)].toString().substring(0,nombre_pions));

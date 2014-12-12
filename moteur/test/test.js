@@ -92,3 +92,16 @@ MonTestCase.prototype.testM=function() {
 
     assertTrue(mm.cherche_adversaire(joueurA).id==1);
 };
+MonTestCase.prototype.testN=function() {
+    var moteur2=new moteur();
+    moteur2.init_plateau();
+    moteur2.tab[moteur2.get_pos(0,0)]=11;
+    moteur2.changetour();
+    moteur2.place_marble(0, 1);
+    moteur2.deplacer_tour(2, 0, 0, 0, 1);
+    console.log("ahah1: "+moteur2.tab[moteur2.get_pos(0,0)]);
+    console.log("ahah2: "+moteur2.tab[moteur2.get_pos(0,1)]);
+    assertTrue(moteur2.tab[moteur2.get_pos(0,0)]==0);
+    assertTrue(moteur2.tab[moteur2.get_pos(0,1)]==112);
+
+};
