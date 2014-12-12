@@ -80,6 +80,7 @@ $( document ).ready(function() {
                 motor.place_marble(colonne,ligne);
                 display_pions_plateau(motor);
                 motor.changetour();
+                save_bdd(1,motor.tab, motor.J1, motor.J2, motor.nbpj1, motor.nbpj2, motor.lastcoup, motor.Jcourant);
             }else{
                 //Initialisation du déplacement
                 nbPions = prompt("Combien de pions voulez-vous déplacer ?","1");
@@ -101,6 +102,7 @@ $( document ).ready(function() {
             console.log("Colonne arrivé : " + colonne);
             console.log("Ligne arrivé : " + ligne);
             display_pions_plateau(motor);
+            save_bdd(1,motor.tab, motor.J1, motor.J2, motor.nbpj1, motor.nbpj2, motor.lastcoup, motor.Jcourant);
             console.log(motor.tab);
             deplacement = false;
         }
@@ -169,24 +171,21 @@ $( document ).ready(function() {
                     tabPlateauInt[i] = parseInt(tabPlateau[i]);
                 }
 
-                motor.init_plateau(tabPlateauInt, points_J1, points_J2, 1, last, pions_j1,pions_j2);
+                motor.init_plateau2(tabPlateauInt, points_J1, points_J2, 1, last, pions_j1,pions_j2);
                 display_pions_plateau(motor);
-                save_bdd(1,motor.tab, motor.J1, motor.J2, motor.nbpj1, motor.nbpj2, motor.lastcoup, motor.Jcourant);
+
             }
         });
 
-
     });
 
-    /*if(isset($_POST['J1']) && isset($_POST['J2']) && isset($_POST['plateau'])
-        && isset($_POST['points_J1']) && isset($_POST['points_J2'])
-        && isset($_POST['pions_j1']) && isset($_POST['pions_j2']) && isset($_POST['last'])){*/
+    
 
     var save_bdd = function(id,plateau,points_J1,points_J2,pions_j1,pions_j2,last, jcourant){
         var chainePlateau = "";
 
         for(var i=0;i<plateau.length;i++){
-            chainePlateau += plateau[i];
+            chainePlateau += plateau[i] + " ";
         }
 
         $.ajax({
@@ -194,7 +193,7 @@ $( document ).ready(function() {
             type: "POST",
             data: "id=" + id + "&plateau=" + chainePlateau + "&points_J1=" + points_J1 + "&points_J2=" + points_J2 + "&pions_j1=" + pions_j1 + "&pions_j2=" + pions_j2 + "&last=" + last + "&courant=" + jcourant,
             success: function(data){
-                alert(data);
+                //console.log(data);
             }
         });
     }
