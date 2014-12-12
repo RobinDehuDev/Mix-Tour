@@ -11,47 +11,6 @@ $( document ).ready(function() {
     var tempIdDivDeplacement;
     var id_plateau = 1;
 
-    //test tableau case
-    /*var board = new Array(5);
-    for(var ligne=0; ligne<board.length;ligne++){
-        board[ligne] = new Array(5);
-
-        for(var colonne=0; colonne<board[ligne].length;colonne++){
-            board[ligne][colonne] = 0;
-        }
-    }
-
-    //test
-    board[0][0] = 0;
-    board[0][1] = 12;
-    board[0][2] = 121;
-    board[0][3] = 0;
-    board[0][4] = 1;
-
-    board[1][0] = 22;
-    board[1][1] = 111;
-    board[1][2] = 1222;
-    board[1][3] = 2;
-    board[1][4] = 0;
-
-    board[2][0] = 0;
-    board[2][1] = 0;
-    board[2][2] = 1;
-    board[2][3] = 21;
-    board[2][4] = 0;
-
-    board[3][0] = 0;
-    board[3][1] = 0;
-    board[3][2] = 0;
-    board[3][3] = 1;
-    board[3][4] = 0;
-
-    board[4][0] = 0;
-    board[4][1] = 0;
-    board[4][2] = 0;
-    board[4][3] = 0;
-    board[4][4] = 0;*/
-
     var motor = new moteur();
 
     var reponse;
@@ -79,32 +38,24 @@ $( document ).ready(function() {
                 //Ajout d'un jeton dans une case vide
                 motor.place_marble(colonne,ligne);
                 display_pions_plateau(motor);
-                console.log(motor.tab);
                 motor.changetour();
                 save_bdd(id_plateau,motor.tab, motor.J1, motor.J2, motor.nbpj1, motor.nbpj2, motor.lastcoup, motor.Jcourant);
+
             }else{
                 //Initialisation du déplacement
-                nbPions = prompt("Combien de pions voulez-vous déplacer ?","1");
+                nbPions = parseInt(prompt("Combien de pions voulez-vous déplacer ?","1"));
                 ligneDepart = ligne;
                 colonneDepart = colonne;
                 deplacement = true;
                 tempIdDivDeplacement = $(this).attr("id");
                 $(this).css('background-color', 'yellow');
-                console.log(motor.tab);
-                console.log(deplacement);
             }
         }else{
             //Execution du déplacement
             motor.deplacer_tour(nbPions,colonneDepart,ligneDepart,colonne,ligne);
             $('#' + tempIdDivDeplacement).css('background-color', 'lightblue');
-            console.log("Nombre pions : " + nbPions);
-            console.log("Colonne départ : " + colonneDepart);
-            console.log("Ligne départ : " + ligneDepart);
-            console.log("Colonne arrivé : " + colonne);
-            console.log("Ligne arrivé : " + ligne);
             display_pions_plateau(motor);
             save_bdd(id_plateau,motor.tab, motor.J1, motor.J2, motor.nbpj1, motor.nbpj2, motor.lastcoup, motor.Jcourant);
-            console.log(motor.tab);
             deplacement = false;
         }
 
@@ -127,16 +78,15 @@ $( document ).ready(function() {
             success: function(data){
 
                 var plateau = data['etat_plateau'];
-                var points_J1 = data['points_J1'];
-                var points_J2 = data['points_J2'];
-                var pions_j1 = data['pions_J1'];
-                var pions_j2 = data['pions_J2'];
-                var last = data['derniercoup'];
-                var courant = data['courant'];
+                var points_J1 = parseInt(data['points_J1']);
+                var points_J2 = parseInt(data['points_J2']);
+                var pions_j1 = parseInt(data['pions_J1']);
+                var pions_j2 = parseInt(data['pions_J2']);
+                var last = parseInt(data['derniercoup']);
+                var courant = parseInt(data['courant']);
 
                 var tabPlateau = plateau.split(" ");
                 var tabPlateauInt = new Array(25);
-
 
                 for(var i=0;i<tabPlateauInt.length;i++){
                     tabPlateauInt[i] = parseInt(tabPlateau[i]);
@@ -144,14 +94,13 @@ $( document ).ready(function() {
 
                 motor.init_plateau2(tabPlateauInt, points_J1, points_J2, courant, last, pions_j1,pions_j2);
                 display_pions_plateau(motor);
-
             }
         });
 
     });
 
     //Raffraichissement du platerau toutes les 5 secondes
-    /*setTimeout(function(){
+    setTimeout(function(){
         $.ajax({
             dataType: "json",
             type: "POST",
@@ -160,12 +109,12 @@ $( document ).ready(function() {
             success: function(data){
 
                 var plateau = data['etat_plateau'];
-                var points_J1 = data['points_J1'];
-                var points_J2 = data['points_J2'];
-                var pions_j1 = data['pions_J1'];
-                var pions_j2 = data['pions_J2'];
-                var last = data['derniercoup'];
-                var courant = data['courant'];
+                var points_J1 = parseInt(data['points_J1']);
+                var points_J2 = parseInt(data['points_J2']);
+                var pions_j1 = parseInt(data['pions_J1']);
+                var pions_j2 = parseInt(data['pions_J2']);
+                var last = parseInt(data['derniercoup']);
+                var courant = parseInt(data['courant']);
 
                 var tabPlateau = plateau.split(" ");
                 var tabPlateauInt = new Array(25);
@@ -177,10 +126,9 @@ $( document ).ready(function() {
 
                 motor.init_plateau2(tabPlateauInt, points_J1, points_J2, courant, last, pions_j1,pions_j2);
                 display_pions_plateau(motor);
-
             }
         });
-    }, 5000);*/
+    }, 5000);
 
     
 
@@ -196,43 +144,8 @@ $( document ).ready(function() {
             type: "POST",
             data: "id=" + id + "&plateau=" + chainePlateau + "&points_J1=" + points_J1 + "&points_J2=" + points_J2 + "&pions_J1=" + pions_J1 + "&pions_J2=" + pions_J2 + "&last=" + last + "&courant=" + jcourant,
             success: function(data){
-                //console.log(data);
             }
         });
-    }
-
-    var nbChiffre = function(number){
-        var ret = 1;
-        while(number >= 10){
-            ret += 1;
-            number = Math.floor(number / 10);
-        }
-
-        return ret;
-    };
-
-    var movePile = function(ligne, colonne){
-
-        if(board[ligne][colonne] !== 0){
-            var nbPions = prompt("Combien de pions voulez-vous déplacer ?","0");
-            var lengthValue = nbChiffre(board[ligne][colonne]);
-
-            var result = lengthValue - nbPions;
-            var diviseValue = board[ligne][colonne];
-            var charvalue = "";
-
-            for(var i=0;i<result;i++){
-                //charvalue = parseInt(String(charvalue) + String(diviseValue % 10));
-                charvalue = String(diviseValue % 10) + charvalue;
-                diviseValue = Math.floor(diviseValue/ 10);
-            }
-
-            tempMovePile = diviseValue;
-
-            board[ligne][colonne] = parseInt(charvalue);
-            console.log("pion restant" + board[ligne][colonne]);
-            //console.log(charvalue);
-        }
     };
 
 
