@@ -61,3 +61,10 @@ MonTestCase.prototype.testK=function(){
     assertTrue(motor.tab[motor.get_pos(4,4)]==1);
     assertTrue(motor.tab[motor.get_pos(3,4)]==112);
 };
+
+MonTestCase.prototype.testL=function() {
+    motor.place_marble(0, 0);
+    motor.place_marble(1, 1);
+    motor.deplacer_tour(1, 1, 1, 0, 0);
+    assertTrue(motor.lastcoup == 10600);
+}

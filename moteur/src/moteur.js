@@ -19,10 +19,13 @@ var moteur = function () {
             this.tab[i] = 0;
         }
     };
-    this.init_plateau2 = function (tab2,j1,j2,jcourant,derniercoup,nbj1,nbj2) {
+
+    this.init_plateau2 = function (tab2,p1,p2,jcourant,derniercoup,nbj1,nbj2) {
         this.Jcourant = jcourant;
         this.nbpj1 = nbj1;
         this.nbpj2 = nbj2;
+        this.J1 = p1;
+        this.J2 = p2;
         this.lastcoup=derniercoup;
         for (var i = 0; i < 25; i++) {
             this.tab[i] = tab2[i];
@@ -281,7 +284,7 @@ var moteur = function () {
             }
             else // si on enleve pas la pile du jeu, on enregistre le dernier coup joué
             {
-                this.lastcoup = parseInt(nombre_pions.toString() + this.get_pos(colonne_depart, ligne_depart).toString() + this.get_pos(colonne_arrivee, ligne_arrivee).toString()); // enregistrement du dernier coup
+                this.lastcoup = nombre_pions * 10000 + this.get_pos(colonne_depart, ligne_depart) * 100 + this.get_pos(colonne_arrivee, ligne_arrivee); // enregistrement du dernier coup
 
                 console.log("dernier coup enregistré : "+this.lastcoup);
             }
