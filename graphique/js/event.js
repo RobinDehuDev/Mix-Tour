@@ -79,8 +79,9 @@ $( document ).ready(function() {
                 //Ajout d'un jeton dans une case vide
                 motor.place_marble(colonne,ligne);
                 display_pions_plateau(motor);
+                console.log(motor.tab);
                 motor.changetour();
-                save_bdd(1,motor.tab, motor.J1, motor.J2, motor.nbpj1, motor.nbpj2, motor.lastcoup, motor.Jcourant);
+                save_bdd(id_plateau,motor.tab, motor.J1, motor.J2, motor.nbpj1, motor.nbpj2, motor.lastcoup, motor.Jcourant);
             }else{
                 //Initialisation du déplacement
                 nbPions = prompt("Combien de pions voulez-vous déplacer ?","1");
@@ -102,13 +103,13 @@ $( document ).ready(function() {
             console.log("Colonne arrivé : " + colonne);
             console.log("Ligne arrivé : " + ligne);
             display_pions_plateau(motor);
-            save_bdd(1,motor.tab, motor.J1, motor.J2, motor.nbpj1, motor.nbpj2, motor.lastcoup, motor.Jcourant);
+            save_bdd(id_plateau,motor.tab, motor.J1, motor.J2, motor.nbpj1, motor.nbpj2, motor.lastcoup, motor.Jcourant);
             console.log(motor.tab);
             deplacement = false;
         }
 
 
-        console.log(motor.tab);
+
 
 
     });
@@ -150,7 +151,7 @@ $( document ).ready(function() {
     });
 
     //Raffraichissement du platerau toutes les 5 secondes
-    setTimeout(function(){
+    /*setTimeout(function(){
         $.ajax({
             dataType: "json",
             type: "POST",
@@ -179,7 +180,7 @@ $( document ).ready(function() {
 
             }
         });
-    }, 5000);
+    }, 5000);*/
 
     
 
@@ -234,16 +235,6 @@ $( document ).ready(function() {
         }
     };
 
-    var convertTabMotor = function(){
-        board = new Array(5);
-
-        for(var ligne=0;ligne<board.length;ligne++){
-            board[ligne] = new Array(5);
-            for(var colonne=0;colonne<board[ligne].length;colonne++){
-                motor.get_pos(colonne,ligne);
-            }
-        }
-    };
 
 /*
 * Affichage des pions sur le plateau a partir du tableau du moteur
