@@ -9,6 +9,7 @@ $( document ).ready(function() {
     var nbPions;
     var deplacement = false;
     var tempIdDivDeplacement;
+    var id_plateau;
 
     //test tableau case
     /*var board = new Array(5);
@@ -168,14 +169,35 @@ $( document ).ready(function() {
                     tabPlateauInt[i] = parseInt(tabPlateau[i]);
                 }
 
-                motor.init_plateau(tabPlateauInt, points_J1, pions_j2, 1, last, pions_j1,pions_j2);
+                motor.init_plateau(tabPlateauInt, points_J1, points_J2, 1, last, pions_j1,pions_j2);
                 display_pions_plateau(motor);
-            
+                save_bdd(1,motor.tab, motor.J1, motor.J2, motor.nbpj1, motor.nbpj2, motor.lastcoup, motor.Jcourant);
             }
         });
 
 
     });
+
+    /*if(isset($_POST['J1']) && isset($_POST['J2']) && isset($_POST['plateau'])
+        && isset($_POST['points_J1']) && isset($_POST['points_J2'])
+        && isset($_POST['pions_j1']) && isset($_POST['pions_j2']) && isset($_POST['last'])){*/
+
+    var save_bdd = function(id,plateau,points_J1,points_J2,pions_j1,pions_j2,last, jcourant){
+        var chainePlateau = "";
+
+        for(var i=0;i<plateau.length;i++){
+            chainePlateau += plateau[i];
+        }
+
+        $.ajax({
+            url: "save_data_partie.php",
+            type: "POST",
+            data: "id=" + id + "&plateau=" + chainePlateau + "&points_J1=" + points_J1 + "&points_J2=" + points_J2 + "&pions_j1=" + pions_j1 + "&pions_j2=" + pions_j2 + "&last=" + last + "&courant=" + jcourant,
+            success: function(data){
+                alert(data);
+            }
+        });
+    }
 
     var nbChiffre = function(number){
         var ret = 1;
@@ -201,7 +223,6 @@ $( document ).ready(function() {
                 //charvalue = parseInt(String(charvalue) + String(diviseValue % 10));
                 charvalue = String(diviseValue % 10) + charvalue;
                 diviseValue = Math.floor(diviseValue/ 10);
-
             }
 
             tempMovePile = diviseValue;
