@@ -99,7 +99,6 @@ var moteur = function () {
             {
                 if ((colonne_arrivee - colonne_depart) != (ligne_arrivee - ligne_depart))
                 {
-
                     return 0;
                 }
             }
