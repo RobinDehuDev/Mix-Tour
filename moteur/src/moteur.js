@@ -19,7 +19,7 @@ var moteur = function () {
             this.tab[i] = 0;
         }
     };
-    this.init_plateau = function (tab2,j1,j2,jcourant,derniercoup,nbj1,nbj2) {
+    this.init_plateau2 = function (tab2,j1,j2,jcourant,derniercoup,nbj1,nbj2) {
         this.Jcourant = jcourant;
         this.nbpj1 = nbj1;
         this.nbpj2 = nbj2;
@@ -229,7 +229,7 @@ var moteur = function () {
            //console.log("longueur "+longueur);
             var pions_a_deplacer = parseInt(this.tab[this.get_pos(colonne_depart, ligne_depart)].toString().substring(0,nombre_pions));
            // console.log("ahah: "+this.tab[this.get_pos(colonne_depart, ligne_depart)].toString().substring(0,nombre_pions));
-            this.tab[this.get_pos(colonne_arrivee, ligne_arrivee)] =parseInt( this.tab[this.get_pos(colonne_depart, ligne_depart)].toString().substring(0,nombre_pions) + this.tab[this.get_pos(colonne_arrivee, ligne_arrivee)].toString()); // on ajoute sur la case finale
+            this.tab[this.get_pos(colonne_arrivee, ligne_arrivee)] = parseInt( this.tab[this.get_pos(colonne_depart, ligne_depart)].toString().substring(0,nombre_pions) + this.tab[this.get_pos(colonne_arrivee, ligne_arrivee)].toString()); // on ajoute sur la case finale
 
             if((longueur-(nombre_pions-1))!==longueur) {
 
@@ -276,6 +276,14 @@ var moteur = function () {
                 }
 
                 this.tab[this.get_pos(colonne_arrivee, ligne_arrivee)] = 0; // on enlève la pile du jeu
+
+                this.lastcoup = 00000; // il n'y a pas de dernier coup lorsqu'on enleve une pile du jeu
+            }
+            else // si on enleve pas la pile du jeu, on enregistre le dernier coup joué
+            {
+                this.lastcoup = parseInt(nombre_pions.toString() + this.get_pos(colonne_depart, ligne_depart).toString() + this.get_pos(colonne_arrivee, ligne_arrivee).toString()); // enregistrement du dernier coup
+
+                console.log("dernier coup enregistré : "+this.lastcoup);
             }
         }
     }

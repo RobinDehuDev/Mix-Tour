@@ -39,6 +39,7 @@ MonTestCase.prototype.testH=function(){
 
     assertTrue(motor.tab[motor.get_pos(4,4)]==111);
     assertTrue(motor.tab[motor.get_pos(2,2)]==0);
+    assertTrue(motor.lastcoup == 11224);
 };
 
 MonTestCase.prototype.testI=function(){
